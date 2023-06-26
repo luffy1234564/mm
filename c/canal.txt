@@ -1,0 +1,151 @@
+cr equ 0dh
+lf equ 0ah
+data segment
+table db '0123456789ABCDEF'
+w dw 10h
+depth   dw 10h
+speed dw 10h
+time dw 1h
+height db 10h
+result dw 00h
+result2 dw 00h
+area db 00h
+msg1 db 'The volume of the canal is : '
+asciir1 db 8 dup (?)
+db cr,lf,'$'
+msg2 db 'The area is field irrigated is : '
+asciir2 db 4 dup (?)
+db cr,lf,'$'
+
+
+
+data ends
+code segment
+assume cs:code,ds:data
+start:
+mov ax,data
+mov ds,ax
+mov ax,speed
+mul time
+mul depth
+mul w
+mov result,ax
+mov result2,ax
+lea bx,table
+lea si,asciir1
+add si,7
+mov ax,result
+and ax,0fh
+xlat
+mov [si],al
+dec si
+
+mov ax,result
+and ax,00f0h
+mov cl,04
+shr ax,cl
+xlat
+mov [si],al
+dec si
+
+mov ax,result
+and ax,0f00h
+mov cl,08
+shr ax,cl
+xlat
+mov [si],al
+dec si
+
+mov ax,result
+and ax,0f000h
+mov cl,0ch
+shr ax,cl
+xlat
+mov [si],al
+dec si
+
+mov result,dx
+mov ax,result
+and ax,0fh
+xlat
+mov [si],al
+dec si
+
+mov ax,result
+and ax,0f0h
+mov cl,04
+shr ax,cl
+xlat
+mov [si],al
+dec si
+
+mov ax,result
+and ax,0f00h
+mov cl,08
+shr ax,cl
+xlat
+mov [si],al
+dec si
+
+mov ax,result
+and ax,0f000h
+mov cl,0ch
+shr ax,cl
+xlat
+mov [si],al
+
+
+mov ah,09h
+lea dx,msg1
+int 21h
+
+mov ax,result2
+div height
+mov result2,ax
+
+lea bx,table
+lea si,asciir2
+
+add si,3
+
+mov ax,result2
+and ax,0fh
+xlat
+mov [si],al
+dec si
+
+mov ax,result2
+and ax,00f0h
+mov cl,04
+shr ax,cl
+xlat
+mov [si],al
+dec si
+
+mov ax,result2
+and ax,0f00h
+mov cl,08
+shr ax,cl
+xlat
+mov [si],al
+dec si
+
+mov ax,result2
+and ax,0f000h
+mov cl,0ch
+shr ax,cl
+xlat
+mov [si],al
+
+
+
+mov ah,09h
+lea dx,msg2
+int 21h
+
+quit:
+mov al,00h
+mov ah,04ch
+int 21h
+code ends
+end start
