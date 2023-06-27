@@ -1,0 +1,22 @@
+assume ds:data, cs:code, es:extra
+data segment
+blk db 10h,20h,30h,40h,50h
+data ends
+extra segment
+result db 5 dup(?)
+extra ends
+code segment
+start:
+mov bx,data
+mov ds,bx
+mov bx,extra
+mov es,bx
+lea si, blk
+lea di,result
+mov cx,0005h
+rep movsb
+mov al,00h
+mov ah,4ch
+int 21h
+code ends
+end start
